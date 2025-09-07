@@ -1,4 +1,5 @@
 #include "LinearList.hpp"
+#include <cmath>
 #include <iostream>
 #include <limits>
 
@@ -50,7 +51,6 @@ int main() {
   float num = inputPositiveFloat();
   LinearFloatList *list = new LinearFloatList(num);
   LinearFloatList *next = list;
-  
 
   for (int i = 1; i < m; i++) {
     while (true) {
@@ -59,10 +59,36 @@ int main() {
         break;
       std::cout << "Это число уже есть в массиве" << std::endl;
     }
-    next->addItem(num);
-    next = next->nextItem();
+    next = next->addItem(num);
   }
+
   list->print();
 
+  LinearFloatList *wholeList = new LinearFloatList();
+  LinearFloatList *fractList = new LinearFloatList();
+  auto wholeItem = wholeList;
+  auto fractItem = fractList;
+
+  LinearFloatList *item = list;
+  LinearFloatList *prev = NULL;
+  while(true) {
+    int whole = std::trunc(item->value);
+    if (whole == item->value) {
+      goto cont;
+    }
+    wholeItem = wholeItem->addItem(whole);
+    fractItem = fractItem->addItem(item->value - whole);
+
+  cont:
+    // prev = item;
+    if (item->hasNext())
+      item = item->nextItem();
+    else break;
+  }
+  std::cout << "Целые части: ";
+  wholeList->print();
+  std::cout << "Дробные части: ";
+
+  fractList->print();
   return 0;
 }

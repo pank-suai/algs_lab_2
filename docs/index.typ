@@ -35,10 +35,18 @@
 $ B="whole"(a_1),"whole"(a_2)dots quad K= "fract"(a_1),"fract"(a_2)dots $
 
 При выполнении задания использовать вид списка: Линейный односвязный.
+= Листинг программы
+
+LinearList.hpp
+
+#raw(read("../src/LinearList.hpp"), lang: "cpp", block: true)
+
+main.cpp
+
+#raw(read("../src/main.cpp"), lang: "cpp", block: true)
 
 = Скриншоты работы программы
 
 = Выводы
-
 
 

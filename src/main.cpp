@@ -70,11 +70,10 @@ int main() {
   auto fractItem = fractList;
 
   LinearFloatList *item = list;
-  LinearFloatList *prev = NULL;
   while(true) {
     int whole = std::trunc(item->value);
     if (whole == item->value) {
-      goto cont;
+      goto cont; // Переходим к следующему элементу без добавления в результаты
     }
     wholeItem = wholeItem->addItem(whole);
     fractItem = fractItem->addItem(item->value - whole);

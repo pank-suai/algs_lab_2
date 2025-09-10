@@ -6,78 +6,121 @@
 #include <iostream>
 
 class LinearFloatList {
-private:
-  LinearFloatList *next;
-
 public:
-  float value;
-  LinearFloatList(float value) { this->value = value; }
-  LinearFloatList() { this->value = std::nanf("EMPTYLIST"); }
-
-  bool isEmpty() {
-    return isnanf(value) && next == NULL;
+  struct Node {
+    float value;
+    Node *next;
+    Node(float val) : value(val), next(nullptr) {}
   };
 
-  /**
-     Вставляет элемент после этого
+private:
+  Node *head;
 
-     @returns вставленный элемент
-   */
-  LinearFloatList *addItem(float value) {
-    if (isEmpty()) {
-      this->value = value;
-      return this;
+public:
+  LinearFloatList() : head(nullptr) {}
+
+  ~LinearFloatList() {
+    Node *current = head;
+    while (current != nullptr) {
+      Node *next = current->next;
+      delete current;
+      current = next;
     }
-    LinearFloatList *newItem = new LinearFloatList(value);
-    newItem->next = next;
-    next = newItem;
-    return next;
   }
 
   /**
-     Имеется ли элемент с таким значением
+   * @brief Получение головного элемента
    */
-  bool hasItem(float value) {
-    LinearFloatList *item = this;
-    while (item->hasNext()) {
-      if (item->value == value) {
+  Node* getHead() const { return head; }
+
+  /**
+   * @brief Проверка, пуст ли список
+   */
+  bool isEmpty() const {
+    return head == nullptr;
+  }
+
+  /**
+   * @brief Вставляет элемент в начало списка
+   */
+  void push_front(float value) {
+    Node* newNode = new Node(value);
+    newNode->next = head;
+    head = newNode;
+  }
+
+  /**
+   * @brief Вставляет элемент в конец списка
+   */
+  void push_back(float value) {
+    Node* newNode = new Node(value);
+    if (head == nullptr) {
+      head = newNode;
+      return;
+    }
+    Node* current = head;
+    while (current->next != nullptr) {
+      current = current->next;
+    }
+    current->next = newNode;
+  }
+
+  /**
+   * @brief Имеется ли элемент с таким значением
+   */
+  bool hasItem(float value) const {
+    Node* current = head;
+    while (current != nullptr) {
+      if (current->value == value) {
         return true;
       }
-      item = item->nextItem();
+      current = current->next;
     }
-    return item->value == value;
+    return false;
   }
 
-  bool hasNext() { return next != NULL; }
-  LinearFloatList *nextItem() { return next; }
+  /**
+   * @brief Удаление элемента по значению
+   */
+  void remove(float value) {
+    if (head == nullptr) return;
+
+    if (head->value == value) {
+      Node* temp = head;
+      head = head->next;
+      delete temp;
+      return;
+    }
+
+    Node* current = head;
+    while (current->next != nullptr && current->next->value != value) {
+      current = current->next;
+    }
+
+    if (current->next != nullptr) {
+      Node* temp = current->next;
+      current->next = current->next->next;
+      delete temp;
+    }
+  }
 
   /**
-     Вывод списка в консоль
+   * @brief Вывод списка в консоль
    */
-  void print() {
-    if (this->isEmpty()) {
+  void print() const {
+    if (isEmpty()) {
       std::cout << "[]" << std::endl;
       return;
     }
-    LinearFloatList *item = this;
+    Node* current = head;
     std::cout << "[";
-    std::cout << item->value;
-    while (item->hasNext()) {
-      item = item->nextItem();
-      std::cout << ", " << item->value;
+    while (current != nullptr) {
+      std::cout << current->value;
+      if (current->next != nullptr) {
+        std::cout << ", ";
+      }
+      current = current->next;
     }
     std::cout << "]" << std::endl;
-  }
-
-  /**
-     Удаление следующего элемента с указанием предыдущего
-  */
-  void removeNext() {
-    if (this->hasNext()) {
-      auto nextItem = this->next;
-      this->next = this->next->next;
-      delete nextItem;
-    }
-    
   }
 };

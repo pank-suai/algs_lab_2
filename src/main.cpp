@@ -19,7 +19,6 @@ int inputPositiveInt() {
 
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
   }
-  return num;
 }
 
 float inputPositiveFloat() {
@@ -40,7 +39,6 @@ float inputPositiveFloat() {
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
   }
-  return num;
 }
 
 int main() {
@@ -48,46 +46,36 @@ int main() {
   int m;
   m = inputPositiveInt();
 
-  float num = inputPositiveFloat();
-  LinearFloatList *list = new LinearFloatList(num);
-  LinearFloatList *next = list;
+  LinearFloatList list;
 
-  for (int i = 1; i < m; i++) {
+  for (int i = 0; i < m; i++) {
+    float num;
     while (true) {
       num = inputPositiveFloat();
-      if (!list->hasItem(num))
+      if (!list.hasItem(num))
         break;
       std::cout << "Это число уже есть в массиве" << std::endl;
     }
-    next = next->addItem(num);
+    list.pushEnd(num);
   }
 
-  list->print();
+  list.print();
 
-  LinearFloatList *wholeList = new LinearFloatList();
-  LinearFloatList *fractList = new LinearFloatList();
-  auto wholeItem = wholeList;
-  auto fractItem = fractList;
+  LinearFloatList wholeList;
+  LinearFloatList fractList;
 
-  LinearFloatList *item = list;
-  while(true) {
-    int whole = std::trunc(item->value);
-    if (whole == item->value) {
-      goto cont; // Переходим к следующему элементу без добавления в результаты
+  for (auto* item = list.getHead(); item != nullptr; item = item->next) {
+    float whole = std::trunc(item->value);
+    if (whole != item->value) {
+      wholeList.pushEnd(whole);
+      fractList.pushEnd(item->value - whole);
     }
-    wholeItem = wholeItem->addItem(whole);
-    fractItem = fractItem->addItem(item->value - whole);
-
-  cont:
-    // prev = item;
-    if (item->hasNext())
-      item = item->nextItem();
-    else break;
   }
-  std::cout << "Целые части: ";
-  wholeList->print();
-  std::cout << "Дробные части: ";
 
-  fractList->print();
+  std::cout << "Целые части: ";
+  wholeList.print();
+  std::cout << "Дробные части: ";
+  fractList.print();
+
   return 0;
 }

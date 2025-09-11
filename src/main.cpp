@@ -56,7 +56,7 @@ int main() {
         break;
       std::cout << "Это число уже есть в массиве" << std::endl;
     }
-    list.push_back(num);
+    list.pushEnd(num);
   }
 
   list.print();
@@ -67,8 +67,8 @@ int main() {
   for (auto* item = list.getHead(); item != nullptr; item = item->next) {
     float whole = std::trunc(item->value);
     if (whole != item->value) {
-      wholeList.push_back(whole);
-      fractList.push_back(item->value - whole);
+      wholeList.pushEnd(whole);
+      fractList.pushEnd(item->value - whole);
     }
   }
 

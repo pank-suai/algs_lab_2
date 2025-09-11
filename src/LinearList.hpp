@@ -1,64 +1,62 @@
 #pragma once
 
-#include <cmath>
-#include <cstddef>
-#include <iomanip>
+
 #include <iostream>
 
 class LinearFloatList {
 public:
-  struct Node {
+  struct Item {
     float value;
-    Node *next;
-    Node(float val) : value(val), next(nullptr) {}
+    Item *next = nullptr;
+    Item(float val) {
+	  value = val;
+    }
   };
 
 private:
-  Node *head;
+  Item *begin = nullptr;
 
 public:
-  LinearFloatList() : head(nullptr) {}
-
   ~LinearFloatList() {
-    Node *current = head;
+    Item *current = begin;
     while (current != nullptr) {
-      Node *next = current->next;
+      Item *next = current->next;
       delete current;
       current = next;
     }
   }
 
   /**
-   * @brief Получение головного элемента
+   * Получение первого элемента
    */
-  Node* getHead() const { return head; }
+  Item* getHead() const { return begin; }
 
   /**
-   * @brief Проверка, пуст ли список
+   * Проверка, пуст ли список
    */
   bool isEmpty() const {
-    return head == nullptr;
+    return begin == nullptr;
   }
 
   /**
-   * @brief Вставляет элемент в начало списка
+   * Вставляет элемент в начало списка
    */
-  void push_front(float value) {
-    Node* newNode = new Node(value);
-    newNode->next = head;
-    head = newNode;
+  void pushBegin(float value) {
+    Item* newNode = new Item(value);
+    newNode->next = begin;
+    begin = newNode;
   }
 
   /**
-   * @brief Вставляет элемент в конец списка
+   * Вставляет элемент в конец списка
    */
-  void push_back(float value) {
-    Node* newNode = new Node(value);
-    if (head == nullptr) {
-      head = newNode;
+  void pushEnd(float value) {
+    Item* newNode = new Item(value);
+    if (begin == nullptr) {
+      begin = newNode;
       return;
     }
-    Node* current = head;
+    Item* current = begin;
     while (current->next != nullptr) {
       current = current->next;
     }
@@ -66,15 +64,15 @@ public:
   }
 
   /**
-   * @brief Имеется ли элемент с таким значением
+   * Имеется ли элемент с таким значением
    */
   bool hasItem(float value) const {
-    Node* current = head;
-    while (current != nullptr) {
-      if (current->value == value) {
+    Item* currentItem = begin;
+    while (currentItem != nullptr) {
+      if (currentItem->value == value) {
         return true;
       }
-      current = current->next;
+      currentItem = currentItem->next;
     }
     return false;
   }
@@ -83,36 +81,36 @@ public:
    * @brief Удаление элемента по значению
    */
   void remove(float value) {
-    if (head == nullptr) return;
+    if (begin == nullptr) return;
 
-    if (head->value == value) {
-      Node* temp = head;
-      head = head->next;
+    if (begin->value == value) {
+      Item* temp = begin;
+      begin = begin->next;
       delete temp;
       return;
     }
 
-    Node* current = head;
-    while (current->next != nullptr && current->next->value != value) {
-      current = current->next;
+    Item* currentItem = begin;
+    while (currentItem->next != nullptr && currentItem->next->value != value) {
+      currentItem = currentItem->next;
     }
 
-    if (current->next != nullptr) {
-      Node* temp = current->next;
-      current->next = current->next->next;
+    if (currentItem->next != nullptr) {
+      Item* temp = currentItem->next;
+      currentItem->next = currentItem->next->next;
       delete temp;
     }
   }
 
   /**
-   * @brief Вывод списка в консоль
+   * Вывод списка в консоль
    */
   void print() const {
     if (isEmpty()) {
       std::cout << "[]" << std::endl;
       return;
     }
-    Node* current = head;
+    Item* current = begin;
     std::cout << "[";
     while (current != nullptr) {
       std::cout << current->value;
